@@ -1,3 +1,3 @@
-## "GraphQL with Sangria" presentation
+## "Introduction to GraphQL: why, how and what?" presentation
 
-[http://olegilyenko.github.io/presentation-graphql-with-sangria](http://olegilyenko.github.io/presentation-graphql-with-sangria)
+[http://olegilyenko.github.io/presentation-graphql-introduction](http://olegilyenko.github.io/presentation-graphql-introduction)
