@@ -227,6 +227,10 @@ query MyProduct {
         </section>
 
         <section>
+          <img src="assets/img/data-requirements.svg">
+        </section>
+
+        <section>
           <h2>Type System</h2>
 
           <pre style="float: left; width: 60%"><code data-trim contenteditable class="javascript">
@@ -367,6 +371,10 @@ val ProductType = ObjectType(
     Field("onStock", IntType,
       resolve = _.value.onStock + 10)))
           </code></pre>
+
+          <pre class="fragment roll-in" data-fragment-index="1"><code data-trim contenteditable class="scala">
+val ProductType = deriveObjectType[Unit, Product]()
+          </code></pre>
         </section>
 
         <section data-background="#D45CA2" class="first-slide">
@@ -376,6 +384,7 @@ val ProductType = ObjectType(
             <li><a href="http://bit.ly/graphql-introduction" target="_blank">http://bit.ly/graphql-introduction</a></li>
             <li><strong>GraphQL:</strong> <a href="http://graphql.org" target="_blank">http://graphql.org</a></li>
             <li><strong>Twitter:</strong> <a href="https://twitter.com/easyangel" target="_blank">https://twitter.com/easyangel</a></li>
+            <li><strong>Zero To GraphQL:</strong> <a href="http://bit.ly/zero-to-graphql" target="_blank">http://bit.ly/zero-to-graphql</a></li>
             <li><strong>Sangria Playground:</strong> <a href="http://try.sangria-graphql.org" target="_blank">http://try.sangria-graphql.org</a></li>
           </ul>
           <br><br>
