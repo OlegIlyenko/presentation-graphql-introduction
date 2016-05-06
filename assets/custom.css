@@ -1,0 +1,141 @@
+.title-font {
+  font-family: "ff-enzo-web" !important;
+}
+
+.normal-font {
+  font-family: "fira-sans-2" !important;
+}
+
+.code-font {
+  font-family: "fira-mono" !important;
+}
+
+a {
+  color: #dc7676 !important;
+}
+
+img, .logo-image {
+  border: none !important;
+  box-shadow: none !important;
+  background: none !important;
+}
+
+.logo-image {
+  opacity: 0.7;
+  max-width: 45% !important;
+  max-height: 95% !important;
+}
+
+backquote, .reveal p, .reveal li, #credit {
+  font-family: "fira-sans-2"; !important;
+  font-weight: 300 !important;
+}
+
+backquote {
+  font-style: italic;
+  font-weight: 100 !important;
+}
+
+.first-slide p, .first-slide a, .first-slide h1, .first-slide h2, .first-slide li {
+  color: #FFFFFF !important;
+  opacity: 0.7;
+}
+
+code {
+  font-family: "fira-mono" !important;
+}
+
+.reveal h1 {
+  font-family: "ff-enzo-web" !important;
+  font-weight: 500;
+  text-transform: none !important;
+  font-size: 2.6em;
+  color: #dc7676;
+}
+
+.reveal h2 {
+  color: #dc7676;
+  font-family: "ff-enzo-web" !important;
+  font-weight: 500;
+  text-transform: none !important;
+  font-size: 2.2em !important;
+  color: #dc7676;
+}
+
+h2.smaller {
+  font-size: 1.8em !important;
+}
+
+.reveal h3 {
+  font-family: "ff-enzo-web" !important;
+  font-weight: 500;
+  text-transform: none !important;
+  font-size: 1.2em !important;
+}
+
+#credit {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 1000;
+  padding: 1em;
+  border-radius: 6px;
+  font-size: 1.5em;
+}
+
+#credit a {
+
+  text-decoration: none !important;
+}
+
+.reveal pre code {
+  background:none;
+  color: #565459;
+}
+
+.reveal pre {
+  box-shadow: none;
+}
+
+.present.image-section  {
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: rgba(255, 255, 255, 0.4) 0px 0px 75px 50px;
+  /*border-radius: 8px;*/
+}
+
+.present.more-opaque {
+  background-color: rgba(255, 255, 255, 0.6);
+  box-shadow: rgba(255, 255, 255, 0.6) 0px 0px 75px 50px;
+}
+
+.present.even-more-opaque {
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: rgba(255, 255, 255, 0.9) 0px 0px 75px 50px;
+}
+
+.good {
+  color: #1c6b2a;
+}
+
+.not-so-good {
+  color: #8b2e17;
+}
+
+iframe.graphiql {
+  width: 85vw;
+  height: 40vh;
+  -webkit-box-shadow: 0px 0px 50px -2px rgba(0,0,0,0.3);
+  -moz-box-shadow: 0px 0px 50px -2px rgba(0,0,0,0.3);
+  box-shadow: 0px 0px 50px -2px rgba(0,0,0,0.3);
+}
+
+.qname {
+  color: #dc7676;
+  font-weight: bold !important;
+}
+
+.qvalue {
+  color: #fbae25;
+  font-weight: bold !important;
+}

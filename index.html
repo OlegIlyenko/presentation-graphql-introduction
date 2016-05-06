@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>GraphQL with Sangria</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Oleg Ilyenko">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css" id="theme">
+    <link rel="stylesheet" href="assets/custom.css">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <script src="assets/offline/fonts.js"></script>
+
+    <script src="https://use.typekit.net/jor2kyz.js"></script>
+    <script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+
+    <link rel="stylesheet" href="assets/highlight/solarized_light.css">
+
+    <link href="//cdn.jsdelivr.net/graphiql/0.4.2/graphiql.css" rel="stylesheet" />
+	</head>
+
+	<body>
+    <div id="credit" style="display: none"></div>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section data-background="#D45CA2" class="first-slide">
+          <img src="assets/img/graphql-white.svg" class="logo-image"/>
+
+          <p style="text-align: center" class="title-font">
+            Introduction to <strong>GraphQL</strong><br>
+            why, how and what?
+          </p>
+
+          <p style="font-size: 70%; opacity: 0.5" class="normal-font">
+            by Oleg Ilyenko / <a href="https://twitter.com/easyangel">@easyangel</a>
+          </p>
+				</section>
+
+        <section>
+          <h2>Typical Rest API</h2>
+
+          <img src="assets/img/rest-api.svg">
+        </section>
+
+        <section>
+          <h2>Common Issues</h2>
+
+          <ul>
+            <li>
+              Over-fetching
+
+              <ul class="fragment fade-in" data-fragment-index="1">
+                <li>/products?<span class="qname">field</span>=<span class="qvalue">name</span>&<span class="qname">field</span>=<span class="qvalue">description</span>&<span class="qname">field</span>=<span class="qvalue">variants[*].price</span></li>
+              </ul>
+            </li>
+            <li class="fragment fade-in" data-fragment-index="2">
+              Under-fetching
+
+              <ul class="fragment fade-in" data-fragment-index="3">
+                <li>/products?<span class="qname">expand</span>=<span class="qvalue">productType</span>&<span class="qname">expand</span>=<span class="qvalue">variants[*].price.taxRate</span></li>
+              </ul>
+            </li>
+            <li class="fragment fade-in" data-fragment-index="4">
+              API changes and evolution
+
+              <ul class="fragment fade-in" data-fragment-index="5">
+                <li>Versioning</li>
+                <li>Deprecation</li>
+                <li>Maintenance</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>API Gateways</h2>
+
+          <img src="assets/img/api-gateway.svg">
+        </section>
+
+        <section>
+          <h2>GraphQL Approach</h2>
+
+          <img src="assets/img/graphql-api.svg" style="max-width: 70%">
+        </section>
+
+        <section>
+          <h2>GraphQL</h2>
+
+          <ul>
+            <li>A data query language</li>
+            <li class="fragment fade-in" data-fragment-index="1">Developed by Facebook</li>
+            <li class="fragment fade-in" data-fragment-index="2">Used internally since 2012</li>
+            <li class="fragment fade-in" data-fragment-index="3">Open source version published in July 2015</li>
+            <li class="fragment fade-in" data-fragment-index="4">Relay released in August 2015</li>
+            <li class="fragment fade-in" data-fragment-index="5">Specification: <a href="https://facebook.github.io/graphql" target="_blank">https://facebook.github.io/graphql</a></li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Response Structure</h2>
+
+          <pre style="float: left; width: 50%"><code data-trim contenteditable class="javascript">
+query MyProduct {
+  product(id: 123) {
+    name
+    description
+
+    picture {
+      width
+      height
+      url
+    }
+  }
+}
+          </code></pre>
+
+          <pre style="float: left; width: 50%" class="fragment fade-in" data-fragment-index="1"><code data-trim contenteditable class="javascript">
+{
+  "data": {
+    "product": {
+      "name": "Delicious Cake",
+      "description": "Just taste it!"
+
+      "picture": {
+        "width": 150,
+        "height": 150,
+        "url": "http://..."
+      }
+    }
+  }
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Every field Is a Function</h2>
+
+          <pre style="float: left; width: 50%"><code data-trim contenteditable class="javascript">
+query MyProduct {
+  products {
+    picture(size: 300) {
+      width, height, url
+    }
+  }
+}
+          </code></pre>
+
+          <pre style="float: left; width: 50%" class="fragment fade-in" data-fragment-index="1"><code data-trim contenteditable class="javascript">
+{
+  "data": {
+    "products": [
+      {
+        "picture": {
+          "width": 300,
+          "height": 300,
+          "url": "http://..."
+        }
+      },
+      ...
+    ]
+  }
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Aliases</h2>
+
+          <pre style="float: left; width: 50%"><code data-trim contenteditable class="javascript">
+query MyProduct {
+  products {
+    thumb: picture(size: 100) {
+      width
+    }
+    fullSize: picture(size: 500) {
+      width
+    }
+  }
+}
+          </code></pre>
+
+          <pre style="float: left; width: 50%" class="fragment fade-in" data-fragment-index="1"><code data-trim contenteditable class="javascript">
+{
+  "data": {
+    "products": [
+      {
+        "thumb": {
+          "width": 100
+        },
+        "fullSize": {
+          "width": 500
+        }
+      },
+      ...
+    ]
+  }
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Type System</h2>
+
+          <pre style="float: left; width: 60%"><code data-trim contenteditable class="javascript">
+type Picture {
+  width: Int!
+  height: Int!
+  url: String
+}
+          </code></pre>
+
+          <pre style="float: left; width: 40%" class="fragment fade-in" data-fragment-index="3"><code data-trim contenteditable class="javascript">
+type Query {
+  product(id: Int!): Product
+  products: [Product]
+}
+          </code></pre>
+
+          <pre style="float: left; width: 60%" class="fragment fade-in" data-fragment-index="1"><code data-trim contenteditable class="javascript">
+interface Identifiable {
+  id: String!
+}
+          </code></pre>
+
+          <pre style="float: left; width: 60%" class="fragment fade-in" data-fragment-index="2"><code data-trim contenteditable class="javascript">
+type Product implements Identifiable {
+  id: String!
+  name: String!
+  description: String
+  picture(size: Int): Picture
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Mutations & Subscriptions</h2>
+
+          <pre><code data-trim contenteditable class="javascript">
+mutation ChangeStaff {
+  changeName(productId: 123, newName: "Cheesecake") {
+    id, version
+  }
+
+  setDescription(productId: 123, description: "Delicious!") {
+    id, version
+  }
+}
+
+subscription ProductEvents {
+  nameChanged(productId: 123) { name }
+  productDeleted { id }
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Demo Time</h2>
+          <!-- GrpahiQL, Fragments, Introspection, docs -->
+
+          <pre><code class="graphiql javascript" data-trim contenteditable>
+{
+  hero {
+    id
+    name
+  }
+}
+
+// Response
+{
+  "data": {
+    "hero": {
+      "id": "2001",
+      "name": "R2-D2"
+    }
+  }
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Backend Agnostic</h2>
+
+          <img src="assets/img/app-layers.svg">
+        </section>
+
+        <section>
+          <img src="assets/img/sangria-logo.svg" style="max-width: 55%"/>
+
+          <ul>
+            <li>A Scala GraphQL implementation</li>
+            <li class="fragment fade-in" data-fragment-index="1">Open source with Apache 2.0 licence</li>
+            <li class="fragment fade-in" data-fragment-index="2">Conforms to GraphQL spec</li>
+            <li class="fragment fade-in" data-fragment-index="3">Simple case-class based schema definition</li>
+            <li class="fragment fade-in" data-fragment-index="4">Query parsing, validation and execution</li>
+            <li class="fragment fade-in" data-fragment-index="5">
+              Out-or-the-box support for different JSON ASTs:
+
+              <ul>
+                <li>play-json, spray-json, json4s, etc.</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Schema Definition</h2>
+
+          <pre><code data-trim contenteditable class="scala">
+import sangria.schema._
+
+case class Product(
+  name: String,
+  description: Option[String])
+
+val ProductType = ObjectType(
+  "Product",
+  "Commodity available for purchase",
+  fields[Unit, Product](
+    Field("name", StringType,
+      resolve = _.value.name),
+    Field("description", OptionType(StringType),
+      resolve = _.value.description)
+  )
+)
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Schema Definition</h2>
+
+          <pre><code data-trim contenteditable class="scala">
+val QueryType = ObjectType("Query",
+  fields[ProductRepo, Unit](
+    Field("product", OptionType(ProductType),
+      arguments = Argument("id", IntType) :: Nil,
+      resolve = c =>
+        c.ctx.getProductById(c.args.arg[Int]("id")))
+  )
+)
+
+val AppSchema = Schema(QueryType)
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Query Execution</h2>
+
+          <pre><code data-trim contenteditable class="scala">
+import sangria.execution.Executor
+import sangria.macros._
+
+import sangria.marshalling.playJson._
+
+val query = graphql"""
+  query MyProduct {
+    product(id: 123) {
+      name
+      description
+    }
+  }
+  """
+
+val result: Future[JsValue] =
+  Executor.execute(AppSchema, query, userContext = new ProductRepo)
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Play Example</h2>
+
+          <pre><code data-trim contenteditable class="scala">
+class Application extends Controller {
+
+  def graphql = Action.async(parse.json) { request =>
+    val query = (request.body \ "query").as[String]
+
+    val operation = (request.body \ "operation").asOpt[String]
+
+    val variables = (request.body \ "variables").toOption.flatMap {
+      case obj: JsObject => Some(obj)
+      case _ => None
+    }
+
+    executeQuery(query, variables, operation)
+  }
+
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Play Example</h2>
+
+          <pre><code data-trim contenteditable class="scala">
+def executeQuery(
+        query: String,
+        variables: Option[JsObject],
+        operation: Option[String]) = {
+  QueryParser.parse(query) match {
+
+    case Success(parsedQuery) =>
+      Executor.execute(AppSchema, parsedQuery,
+        userContext = new ProductRepo,
+        operationName = operation,
+        variables = variables getOrElse Json.obj()) map (Ok(_))
+
+    case Failure(error: SyntaxError) =>
+      // can't parse GraphQL query, return error response
+  }
+}
+          </code></pre>
+
+          <span class="fragment fade-in" data-fragment-index="1">Sangria Playground: <a href="http://try.sangria-graphql.org" target="_blank">http://try.sangria-graphql.org</a></span>
+        </section>
+
+        <section>
+          <h2>Additional Features</h2>
+
+          <ul>
+            <li>
+              Deferred values
+
+              <ul>
+                <li>Helps to solve N+1 query problem</li>
+              </ul>
+            </li>
+            <li class="fragment fade-in" data-fragment-index="1">
+              Projections
+
+              <ul>
+                <li>Helps to build efficient DB projections</li>
+              </ul>
+            </li>
+            <li class="fragment fade-in" data-fragment-index="3">
+              Middleware
+
+              <ul>
+                <li>Query execution instrumentation</li>
+                <li>Security primitives</li>
+                <li>Performance measurements</li>
+              </ul>
+            </li>
+            <li class="fragment fade-in" data-fragment-index="4">
+              Query reducers
+
+              <ul>
+                <li>Query analysis before execution</li>
+                <li>Query complexity measurement</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section data-background="#D45CA2" class="first-slide">
+          <h1>Thank you!</h1>
+          <br>
+          <ul class="fragment roll-in" data-fragment-index="2">
+            <li><a href="http://bit.ly/graphql-with-sangria" target="_blank">http://bit.ly/graphql-with-sangria</a></li>
+            <li><strong>Twitter:</strong> <a href="https://twitter.com/easyangel" target="_blank">https://twitter.com/easyangel</a></li>
+            <li><strong>GraphQL:</strong> <a href="http://graphql.org" target="_blank">http://graphql.org</a></li>
+            <li><strong>Sangria:</strong> <a href="http://sangria-graphql.org" target="_blank">http://sangria-graphql.org</a></li>
+            <li><strong>GitHub:</strong> <a href="https://github.com/sangria-graphql" target="_blank">https://github.com/sangria-graphql</a></li>
+            <li><strong>Sangria Playground:</strong> <a href="http://try.sangria-graphql.org" target="_blank">http://try.sangria-graphql.org</a></li>
+          </ul>
+          <br><br>
+          <h2 class="fragment roll-in" data-fragment-index="3" style="opacity: 0.7;">Questions?</h2>
+        </section>
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+		<script src="assets/jquery-2.1.3.min.js"></script>
+		<script src="assets/custom.js"></script>
+
+		<script>
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
