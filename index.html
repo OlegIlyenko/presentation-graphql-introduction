@@ -55,8 +55,7 @@
           <img src="assets/img/graphql-white.svg" class="logo-image"/>
 
           <p style="text-align: center" class="title-font">
-            Introduction to <strong>GraphQL</strong><br>
-            why, how and what?
+            Introduction to <strong>GraphQL</strong>
           </p>
 
           <p style="font-size: 70%; opacity: 0.5" class="normal-font">
@@ -67,7 +66,7 @@
         <section>
           <h2>Typical Rest API</h2>
 
-          <img src="assets/img/rest-api.svg">
+          <img src="assets/img/rest-api.svg" style="width: 80%">
         </section>
 
         <section>
@@ -309,186 +308,74 @@ subscription ProductEvents {
         <section>
           <h2>Backend Agnostic</h2>
 
-          <img src="assets/img/app-layers.svg">
+          <img src="assets/img/app-layers.svg" style="width: 75%">
         </section>
 
         <section>
-          <img src="assets/img/sangria-logo.svg" style="max-width: 55%"/>
+          <h2>Languages</h2>
 
-          <ul>
-            <li>A Scala GraphQL implementation</li>
-            <li class="fragment fade-in" data-fragment-index="1">Open source with Apache 2.0 licence</li>
-            <li class="fragment fade-in" data-fragment-index="2">Conforms to GraphQL spec</li>
-            <li class="fragment fade-in" data-fragment-index="3">Simple case-class based schema definition</li>
-            <li class="fragment fade-in" data-fragment-index="4">Query parsing, validation and execution</li>
-            <li class="fragment fade-in" data-fragment-index="5">
-              Out-or-the-box support for different JSON ASTs:
+          <div class="logos">
+            <div class="impl-logo"><a href="https://github.com/graphql/graphql-js/"><img src="assets/img/js-logo.svg"></a></div>
+            <div class="impl-logo"><a href="https://github.com/graphql/graphql-js/"><img src="assets/img/node-logo.svg"></a></div>
+            <div class="impl-logo fragment fade-in" data-fragment-index="1"><a href="http://sangria-graphql.org/"><img src="assets/img/scala-logo.svg"></a></div>
+            <div class="impl-logo fragment fade-in" data-fragment-index="1"><a href="http://sangria-graphql.org/"><img src="assets/img/sangria-logo.svg"></a></div>
+            <div class="impl-logo fragment fade-in" data-fragment-index="2"><a href="https://github.com/graphql-java/graphql-java"><img src="assets/img/java-logo.svg"></a></div>
+            <div class="impl-logo fragment fade-in" data-fragment-index="3"><a href="http://graphene-python.org/"><img src="assets/img/python-logo.svg"></a></div>
+            <div class="impl-logo fragment fade-in" data-fragment-index="3"><a href="http://graphene-python.org/"><img src="assets/img/graphene.png"></a></div>
+            <div class="impl-logo fragment fade-in" data-fragment-index="4"><a href="https://github.com/rmosolgo/graphql-ruby"><img src="assets/img/ruby_logo.svg"></a></div>
+            <div class="impl-logo fragment fade-in" data-fragment-index="5"><a href="https://github.com/jdnavarro/graphql-haskell"><img src="assets/img/haskell-logo.svg"></a></div>
+            <div class="impl-logo fragment fade-in" data-fragment-index="5"><a href="https://github.com/graphql-go/graphql"><img src="assets/img/gopher.svg"></a></div>
+            <div class="impl-logo fragment fade-in" data-fragment-index="5"><a href="https://github.com/graphql-elixir/graphql"><img src="assets/img/elixir-logo.png" ></a></div>
+            <div class="impl-logo fragment fade-in" data-fragment-index="5"><a href="https://github.com/bjornbytes/graphql-lua"><img src="assets/img/lua-logo.svg"></a></div>
+            <div class="impl-logo fragment fade-in" data-fragment-index="5"><a href="https://github.com/webonyx/graphql-php"><img src="assets/img/php_logo.png"></a></div>
+            <div class="impl-logo fragment fade-in" data-fragment-index="5"><a href="https://github.com/graphql/libgraphqlparser"><img src="assets/img/c-logo.svg"></a></div>
+            <div class="impl-logo fragment fade-in" data-fragment-index="5"><a href="https://github.com/graphql-dotnet/graphql-dotnet"><img src="assets/img/csharp-logo.png"></a></div>
+          </div>
 
-              <ul>
-                <li>play-json, spray-json, json4s, etc.</li>
-              </ul>
-            </li>
-          </ul>
         </section>
 
         <section>
-          <h2>Schema Definition</h2>
+          <h2>Example: JavaScript</h2>
+
+          <pre><code data-trim contenteditable class="javascript">
+var ProductType = new GraphQLObjectType({
+  name: "Product",
+  description: "Commodity available for purchase",
+  fields: {
+    id: {type: GraphQLString},
+    onStock: {
+      type: GraphQLInt,
+      resolve(product) {
+        return product.onStock + 10;
+      }
+    }
+  }
+});
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Example: Scala</h2>
 
           <pre><code data-trim contenteditable class="scala">
-import sangria.schema._
-
-case class Product(
-  name: String,
-  description: Option[String])
-
 val ProductType = ObjectType(
   "Product",
   "Commodity available for purchase",
   fields[Unit, Product](
-    Field("name", StringType,
-      resolve = _.value.name),
-    Field("description", OptionType(StringType),
-      resolve = _.value.description)
-  )
-)
+    Field("id", StringType,
+      resolve = _.value.id),
+    Field("onStock", IntType,
+      resolve = _.value.onStock + 10)))
           </code></pre>
-        </section>
-
-        <section>
-          <h2>Schema Definition</h2>
-
-          <pre><code data-trim contenteditable class="scala">
-val QueryType = ObjectType("Query",
-  fields[ProductRepo, Unit](
-    Field("product", OptionType(ProductType),
-      arguments = Argument("id", IntType) :: Nil,
-      resolve = c =>
-        c.ctx.getProductById(c.args.arg[Int]("id")))
-  )
-)
-
-val AppSchema = Schema(QueryType)
-          </code></pre>
-        </section>
-
-        <section>
-          <h2>Query Execution</h2>
-
-          <pre><code data-trim contenteditable class="scala">
-import sangria.execution.Executor
-import sangria.macros._
-
-import sangria.marshalling.playJson._
-
-val query = graphql"""
-  query MyProduct {
-    product(id: 123) {
-      name
-      description
-    }
-  }
-  """
-
-val result: Future[JsValue] =
-  Executor.execute(AppSchema, query, userContext = new ProductRepo)
-          </code></pre>
-        </section>
-
-        <section>
-          <h2>Play Example</h2>
-
-          <pre><code data-trim contenteditable class="scala">
-class Application extends Controller {
-
-  def graphql = Action.async(parse.json) { request =>
-    val query = (request.body \ "query").as[String]
-
-    val operation = (request.body \ "operation").asOpt[String]
-
-    val variables = (request.body \ "variables").toOption.flatMap {
-      case obj: JsObject => Some(obj)
-      case _ => None
-    }
-
-    executeQuery(query, variables, operation)
-  }
-
-}
-          </code></pre>
-        </section>
-
-        <section>
-          <h2>Play Example</h2>
-
-          <pre><code data-trim contenteditable class="scala">
-def executeQuery(
-        query: String,
-        variables: Option[JsObject],
-        operation: Option[String]) = {
-  QueryParser.parse(query) match {
-
-    case Success(parsedQuery) =>
-      Executor.execute(AppSchema, parsedQuery,
-        userContext = new ProductRepo,
-        operationName = operation,
-        variables = variables getOrElse Json.obj()) map (Ok(_))
-
-    case Failure(error: SyntaxError) =>
-      // can't parse GraphQL query, return error response
-  }
-}
-          </code></pre>
-
-          <span class="fragment fade-in" data-fragment-index="1">Sangria Playground: <a href="http://try.sangria-graphql.org" target="_blank">http://try.sangria-graphql.org</a></span>
-        </section>
-
-        <section>
-          <h2>Additional Features</h2>
-
-          <ul>
-            <li>
-              Deferred values
-
-              <ul>
-                <li>Helps to solve N+1 query problem</li>
-              </ul>
-            </li>
-            <li class="fragment fade-in" data-fragment-index="1">
-              Projections
-
-              <ul>
-                <li>Helps to build efficient DB projections</li>
-              </ul>
-            </li>
-            <li class="fragment fade-in" data-fragment-index="3">
-              Middleware
-
-              <ul>
-                <li>Query execution instrumentation</li>
-                <li>Security primitives</li>
-                <li>Performance measurements</li>
-              </ul>
-            </li>
-            <li class="fragment fade-in" data-fragment-index="4">
-              Query reducers
-
-              <ul>
-                <li>Query analysis before execution</li>
-                <li>Query complexity measurement</li>
-              </ul>
-            </li>
-          </ul>
         </section>
 
         <section data-background="#D45CA2" class="first-slide">
           <h1>Thank you!</h1>
           <br>
           <ul class="fragment roll-in" data-fragment-index="2">
-            <li><a href="http://bit.ly/graphql-with-sangria" target="_blank">http://bit.ly/graphql-with-sangria</a></li>
-            <li><strong>Twitter:</strong> <a href="https://twitter.com/easyangel" target="_blank">https://twitter.com/easyangel</a></li>
+            <li><a href="http://bit.ly/graphql-introduction" target="_blank">http://bit.ly/graphql-introduction</a></li>
             <li><strong>GraphQL:</strong> <a href="http://graphql.org" target="_blank">http://graphql.org</a></li>
-            <li><strong>Sangria:</strong> <a href="http://sangria-graphql.org" target="_blank">http://sangria-graphql.org</a></li>
-            <li><strong>GitHub:</strong> <a href="https://github.com/sangria-graphql" target="_blank">https://github.com/sangria-graphql</a></li>
+            <li><strong>Twitter:</strong> <a href="https://twitter.com/easyangel" target="_blank">https://twitter.com/easyangel</a></li>
             <li><strong>Sangria Playground:</strong> <a href="http://try.sangria-graphql.org" target="_blank">http://try.sangria-graphql.org</a></li>
           </ul>
           <br><br>

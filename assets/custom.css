@@ -139,3 +139,15 @@ iframe.graphiql {
   color: #fbae25;
   font-weight: bold !important;
 }
+
+.logos {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.logos img {
+  /*float: left;*/
+  height: 100px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+}
